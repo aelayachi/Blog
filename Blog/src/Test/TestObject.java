@@ -9,7 +9,7 @@ public class TestObject {
 
 	public static void main(String[] args) {
 		
-		User user = new User("aelayachi");
+		User user = new User(1,"aelayachi","aelayachi@gmail.com");
 		Date date = new Date();
 		String content= "This is my first post";
 		FriendsPost postFromFriend = new FriendsPost(date,content,user);

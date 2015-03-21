@@ -1,10 +1,12 @@
 package blog;
 
 import java.util.ArrayList;
+import java.io.*;
+import java.util.Calendar;
 
 import base.*;
 
-public class Blog {
+public class Blog implements Serializable{
 	
 	private User user;
 	private ArrayList<Post> allPosts;
@@ -38,7 +40,7 @@ public class Blog {
 	*
 	*@return allPosts
 	*/
-	public ArrayList<Post> getAllPosts() {
+	public ArrayList<Post> getPosts() {
 		return allPosts;
 	}
 	
@@ -46,8 +48,11 @@ public class Blog {
 	*
 	*@param allPosts
 	*/
-	public void setAllPosts(ArrayList<Post> allPosts) {
-		this.allPosts = allPosts;
+	public void setPosts(ArrayList<Post> allPosts) {
+		this.allPosts.clear();
+		for (Post p : allPosts){
+			this.allPosts.add(p);
+		}
 	}
 	
 	/**
@@ -94,7 +99,7 @@ public class Blog {
 	*@return String
 	*/
 	public String toString(){
-		return 	"Blog of " + this.user.getNickname();	
+		return 	"Blog of " + this.user.getUserName();	
 	}
 	
 	@Override
@@ -114,16 +119,18 @@ public class Blog {
 		
 		Blog b = (Blog)o;
 		// Check for sizes and nulls
-	    if ((this.allPosts.size() != b.getAllPosts().size()) || 
-	    		(this.allPosts == null && b.getAllPosts()!= null) || 
-	    		(this.allPosts != null && b.getAllPosts()== null)){
+	    if ((this.allPosts.size() != b.getPosts().size()) || 
+	    		(this.allPosts == null && b.getPosts()!= null) || 
+	    		(this.allPosts != null && b.getPosts()== null)){
 	        return false;
 	    }
 
 	    // Compare the two lists (no need to sort because dates) 
-		ans = this.allPosts.equals(b.getAllPosts());
+		ans = this.allPosts.equals(b.getPosts());
 	    	
-	    if (b.getUser().getNickname() == this.user.getNickname()){
+	    if (b.getUser().getUserID() == this.user.getUserID() &&
+	    		b.getUser().getUserName() == this.user.getUserName() &&
+	    		b.getUser().getUserEmail() == this.user.getUserEmail()){
 	    	ans =  ans && true;
 	    }
 	    
@@ -143,5 +150,47 @@ public class Blog {
 		return hashCode;
 		
 	}
-
+	
+	/**
+	 * Search posts created in month and mentioned someone
+	 * 
+	 * @param month
+	 * @param someone
+	 */
+	public void search(int month, String someone){
+		Calendar cal = Calendar.getInstance();
+		//search from all posts
+		for (Post p : allPosts){
+			//get the current post's month (note that Calendar.Month starts
+			//with 0, not 1)
+			cal.setTime(p.getDate());
+			int postMonth = cal.get(Calendar.MONTH);
+			if ((postMonth+1 == month) && p.contains(someone)){
+				System.out.println(p.toString());
+			}
+		}
+	}
+	
+	public void save(String filepath){
+		try{
+			FileOutputStream fileStream = new FileOutputStream(filepath);
+			ObjectOutputStream os = new ObjectOutputStream(fileStream);
+			os.writeObject(this);
+			os.close();
+		} catch (Exception ex){
+			System.out.println("Wait! There is something wrong. I cannot save the file..");
+		}
+	}
+	
+	public void load(String filepath){
+		try{
+			FileInputStream fileStream = new FileInputStream(filepath);
+			ObjectInputStream is = new ObjectInputStream(fileStream);
+			Blog bl = (Blog)is.readObject();
+			this.setUser(bl.getUser());
+			this.setPosts(bl.getPosts());
+		} catch (Exception e){
+			System.out.println("Wait! There is something wrong. I cannot find the file..");
+		}	
+	}
 }

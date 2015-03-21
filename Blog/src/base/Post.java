@@ -1,8 +1,9 @@
 package base;
 import java.util.Date;
+import java.io.*;
 
 
-public class Post {
+public class Post implements Comparable<Post>, Serializable{
 	private Date date;
 	private String content;
 	
@@ -106,6 +107,9 @@ public class Post {
 		return this.content.contains(keyword);
 	}
 	
+	public int compareTo(Post p){
+		return this.date.compareTo(p.getDate());
+	}
 	
 }
 

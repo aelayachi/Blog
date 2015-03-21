@@ -24,7 +24,7 @@ public class FriendsPost extends Post{
 	*@return String
 	*/
 	public String toString(){
-		return 	"Post from " + friend.getNickname() +  " at " 
+		return 	"Post from " + friend.getUserName() +  " at " 
 				+ super.getDate() + ": " + super.getContent();	
 	}
 }

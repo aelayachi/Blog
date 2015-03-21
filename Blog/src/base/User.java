@@ -1,32 +1,83 @@
 package base;
 
-import java.util.Date;
+import java.io.*;
 
-public class User {
-	private String nickname;
+public class User implements Comparable<User>, Serializable{
+
+	private int userID;
+	private String userName;
+	private String userEmail;
 	
 	/**
 	*Constructor
-	*@param nickname
+	*@param userID
+	*@param userName
+	*@param userEmail
 	*/
-	public User(String nickname) {
-		this.nickname = nickname;
+	public User(int userID, String userName, String userEmail) {
+		this.userID = userID;
+		this.userName = userName;
+		this.userEmail = userEmail;
+	}
+
+	/**
+	*
+	*@return userID
+	*/
+	public int getUserID() {
+		return userID;
 	}
 	
 	/**
 	*
-	*@return nickname
+	*@param userID
 	*/
-	public String getNickname(){
-		return this.nickname;
+	public void setUserID(int userID) {
+		this.userID = userID;
 	}
-	
+
 	/**
 	*
-	*@param nickname
+	*@return userName
 	*/
-	public void setNickname(String nickname){
-		this.nickname = nickname;
+	public String getUserName() {
+		return userName;
+	}
+
+	/**
+	*
+	*@param userName
+	*/
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	/**
+	*
+	*@return userEmail
+	*/
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	/**
+	*
+	*@param userEmail
+	*/
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
+	
+	@Override
+	/**
+	*
+	*Output this object in string format
+	*@return String
+	*/
+	public String toString(){
+		return 	"User [userID=" + userID + 
+				", userName=" + userName 
+				+ ", userEmail=" + userEmail + "]"; 	
 	}
 	
 	@Override
@@ -45,11 +96,25 @@ public class User {
 		}
 		
 		User user = (User)o;
-		if (user.getNickname() == this.nickname){
+		if (user.getUserName() == this.userName &&
+				user.getUserID() == this.userID &&
+				user.getUserEmail() == this.userEmail){
 			ans = true;
 		}
 		
 		return ans;
 		
+	}
+	
+	
+	
+	public int compareTo(User U){
+		if (this.userID == U.getUserID()){
+			return 0;
+		} else if (this.userID > U.getUserID()){
+			return 1;
+		} else {
+			return -1;
+		}
 	}
 }
