@@ -81,6 +81,20 @@ public class Blog implements Serializable{
 	}
 	
 	/**
+	* list all posts in the blog
+	*
+	*/
+	public String listPosts(){
+		String result;
+		result = "Current posts:\n" ;
+		for (int i=0; i<allPosts.size(); i++){
+			result = result + System.getProperty("line.separator") + 
+					"Post[" + (i+1) + "] " + allPosts.get(i);
+		}
+		return result;
+	}
+	
+	/**
 	* delete a post from the blog
 	* @param index
 	*/
