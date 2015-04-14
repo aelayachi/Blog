@@ -91,6 +91,7 @@ public class Blog implements Serializable{
 			result = result + System.getProperty("line.separator") + 
 					"Post[" + (i+1) + "] " + allPosts.get(i);
 		}
+		System.out.println(result);
 		return result;
 	}
 	
@@ -187,12 +188,14 @@ public class Blog implements Serializable{
 	
 	public void save(String filepath){
 		try{
-			FileOutputStream fileStream = new FileOutputStream(filepath);
-			ObjectOutputStream os = new ObjectOutputStream(fileStream);
+			FileOutputStream fs = new FileOutputStream(filepath); 
+			ObjectOutputStream os = new ObjectOutputStream(fs);
 			os.writeObject(this);
 			os.close();
-		} catch (Exception ex){
-			System.out.println("Wait! There is something wrong. I cannot save the file..");
+		}catch(FileNotFoundException ex){
+			ex.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -207,4 +210,5 @@ public class Blog implements Serializable{
 			System.out.println("Wait! There is something wrong. I cannot find the file..");
 		}	
 	}
+	
 }

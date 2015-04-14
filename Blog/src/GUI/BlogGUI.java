@@ -3,6 +3,8 @@ package GUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Date;
 
 import javax.swing.*;
@@ -26,6 +28,7 @@ public class BlogGUI {
 	private JButton post;
 	private int sizeX = 600;
 	private int sizeY = 600;
+	private String filepath = "./okok";
 	
 	public BlogGUI() {
 		blog =  new Blog(new User(1,"aelayachi","aelayachi@gmail.com"));
@@ -40,16 +43,15 @@ public class BlogGUI {
 		panel2 = new JPanel();
 		panel3 = new JPanel();
 		information = new JLabel("You can still input 140 characters!");
-		postTextArea = new JTextArea("What's on your mind?");
+		postTextArea = new JTextArea("");
+		postTextArea.addKeyListener(new lengthListener());
 		postContent = new JTextArea("Here is put my posts!");
 		refresh = new JButton("refresh");
-		refresh.setBackground(Color.CYAN);
+		refresh.setBackground(new Color(135,206,250));
 		refresh.addActionListener(new refreshListener());
-		//refresh.setPreferredSize(new Dimension(250,20));
 		post = new JButton("post");
 		post.setBackground(Color.ORANGE);
 		post.addActionListener(new postListener());
-		//post.setPreferredSize(new Dimension(250,20));
 		
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); 
 		panel1.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -72,6 +74,7 @@ public class BlogGUI {
 	class refreshListener implements ActionListener {
 		public void actionPerformed(ActionEvent event){
 			if (event.getSource() == refresh){
+				blog.load(filepath);
 				postContent.setText(blog.listPosts());
 			}
 		}
@@ -80,7 +83,32 @@ public class BlogGUI {
 	class postListener implements ActionListener {
 		public void actionPerformed(ActionEvent event){
 			if (event.getSource() == post){
-				blog.post(new Post(new Date(),postTextArea.getText()));
+				if (!postTextArea.getText().isEmpty() && (postTextArea.getText().length() <= 140)) {
+					blog.load(filepath);
+					Post p = new Post(new Date(),postTextArea.getText());
+					blog.post(p);
+					postContent.setText(p.toString());
+					blog.save(filepath);
+					postTextArea.setText("");
+					information.setText("You can still input 140 characters!");
+				}			
+			}
+		}
+	}
+	
+	class lengthListener implements KeyListener {
+		public void keyTyped(KeyEvent e){
+		}
+		
+		public void keyPressed(KeyEvent e){
+		}
+		
+		public void keyReleased(KeyEvent e){
+			int lengthText = postTextArea.getText().length();
+			if (lengthText <= 140){
+				information.setText("You can still input "+ (140-lengthText) +" characters!");
+			} else {
+				information.setText("Your post length has exceeded 140!");
 			}
 		}
 	}
